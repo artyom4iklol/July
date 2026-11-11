@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Ученики · July{% endblock %}
+{% block body %}
+<h1>Ученики</h1>
+<div class="columns">
+  <section>
+    {% for student in students %}
+      <a class="row" href="{{ url_for('student_page', student_id=student.id) }}">
+        <strong>{{ student.name }}</strong>{% if student.level %}<span>{{ student.level }}</span>{% endif %}
+      </a>
+    {% else %}
+      <p>Добавьте первого ученика, чтобы завести журнал занятий.</p>
+    {% endfor %}
+  </section>
+  <section>
+    <h2>Новый ученик</h2>
+    <form method="post" action="{{ url_for('add_student') }}">
+      {% with student=none %}{% include 'profile.html' %}{% endwith %}
+      <button>Добавить ученика</button>
+    </form>
+  </section>
+</div>
+{% endblock %}

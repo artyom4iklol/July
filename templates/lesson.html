@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}{{ lesson.topic }} · July{% endblock %}
+{% block body %}
+<a href="{{ url_for('student_page', student_id=student.id) }}">{{ student.name }}</a>
+<h1>{{ lesson.topic }}</h1>
+<p>{{ lesson.lesson_date }}</p>
+<div class="columns">
+  <section>
+    <h2>Материалы занятия</h2>
+    <h3>Анализ перед занятием</h3><p class="prose">{{ lesson.analysis }}</p>
+    {% if lesson.plan %}<h3>План</h3><p class="prose">{{ lesson.plan }}</p>{% endif %}
+    {% if lesson.questions %}<h3>Анкета для результатов</h3><p class="prose">{{ lesson.questions }}</p>{% endif %}
+    {% if lesson.lesson_notes %}<h3>Заметки с занятия</h3><p class="prose">{{ lesson.lesson_notes }}</p>{% endif %}
+  </section>
+  <section>
+    {% if lesson.status == 'completed' %}
+      <h2>Результат</h2>
+      <h3>Ответы на анкету</h3><p class="prose">{{ lesson.answers }}</p>
+      <h3>Итог занятия</h3><p class="prose">{{ lesson.result }}</p>
+      {% if lesson.next_steps %}<h3>Что дальше</h3><p class="prose">{{ lesson.next_steps }}</p>{% endif %}
+    {% else %}
+      <form method="post">
+        <input type="hidden" name="csrf" value="{{ csrf }}">
+        <input type="hidden" name="status" value="{{ lesson.status }}">
+        {% if lesson.status == 'analysis' %}
+          <h2>Подготовка занятия</h2>
+          <label>План, упражнения и материалы <textarea name="plan" rows="5" required></textarea></label>
+          <label>Вопросы для анкеты <textarea name="questions" rows="4" required></textarea></label>
+          <button>Сохранить подготовку</button>
+        {% elif lesson.status == 'prepared' %}
+          <h2>Занятие</h2>
+          <label>Заметки о том, как прошло занятие <textarea name="lesson_notes" rows="5"></textarea></label>
+          <button>Отметить занятие проведённым</button>
+        {% else %}
+          <h2>Анкета и результат</h2>
+          <label>Ответы на вопросы анкеты <textarea name="answers" rows="4" required></textarea></label>
+          <label>Итог занятия <textarea name="result" rows="4" required></textarea></label>
+          <label>Что повторить на следующем уроке <textarea name="next_steps" rows="3"></textarea></label>
+          <button>Сохранить результат</button>
+        {% endif %}
+      </form>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

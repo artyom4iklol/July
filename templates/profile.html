@@ -1,0 +1,5 @@
+<input type="hidden" name="csrf" value="{{ csrf }}">
+<label>Имя <input name="name" value="{{ student.name if student else '' }}" required></label>
+<label>Уровень <input name="level" value="{{ student.level if student else '' }}"></label>
+<label>Цели <textarea name="goals" rows="3">{{ student.goals if student else '' }}</textarea></label>
+<label>Заметки <textarea name="notes" rows="3">{{ student.notes if student else '' }}</textarea></label>

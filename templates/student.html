@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}{{ student.name }} · July{% endblock %}
+{% block body %}
+<h1>{{ student.name }}</h1>
+<div class="columns">
+  <div class="stack">
+    <section>
+      <h2>История занятий</h2>
+      {% set statuses = {'analysis': 'Анализ', 'prepared': 'Подготовлено', 'held': 'Проведено', 'completed': 'Результат сохранён'} %}
+      {% for lesson in lessons %}
+        <a class="row" href="{{ url_for('lesson_page', lesson_id=lesson.id) }}">
+          <strong>{{ lesson.topic }}</strong><span>{{ lesson.lesson_date }} · {{ statuses[lesson.status] }}</span>
+        </a>
+      {% else %}
+        <p>Занятий пока нет.</p>
+      {% endfor %}
+    </section>
+    <section>
+      <h2>Профиль ученика</h2>
+      <form method="post">{% include 'profile.html' %}<button>Сохранить профиль</button></form>
+    </section>
+  </div>
+  <section>
+    <h2>Анализ перед занятием</h2>
+    {% if student.goals %}<h3>Цели ученика</h3><p class="prose">{{ student.goals }}</p>{% endif %}
+    {% if latest %}
+      <h3>Последний результат</h3>
+      <a href="{{ url_for('lesson_page', lesson_id=latest.id) }}">{{ latest.topic }} · {{ latest.lesson_date }}</a>
+      <p class="prose">{{ latest.result }}</p>
+      {% if latest.next_steps %}<h3>Что дальше</h3><p class="prose">{{ latest.next_steps }}</p>{% endif %}
+    {% endif %}
+    <form method="post" action="{{ url_for('add_lesson', student_id=student.id) }}">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
+      <label>Тема <input name="topic" required></label>
+      <label>Дата <input type="date" name="lesson_date" value="{{ today }}" required></label>
+      <label>Что повторить и чему научить <textarea name="analysis" rows="4" required></textarea></label>
+      <button>Перейти к подготовке</button>
+    </form>
+  </section>
+</div>
+{% endblock %}

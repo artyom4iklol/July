@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block body %}
+<h1>{{ 'Страница не найдена' if error.code == 404 else 'Форма не сохранена' }}</h1>
+{% if error.code != 404 %}<p>{{ error.description }}</p>{% endif %}
+<a href="{{ url_for('index') }}">К списку учеников</a>
+{% endblock %}
